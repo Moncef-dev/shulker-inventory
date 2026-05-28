@@ -15,7 +15,9 @@
 	"icon": "assets/shulker-inventory/icon.png",
 	"environment": "*",
 	"entrypoints": {
-		"main": [],
+		"main": [
+			"com.example.shulkerinventory.ShulkerInventory"
+		],
 		"client": []
 	},
 	"mixins": [
