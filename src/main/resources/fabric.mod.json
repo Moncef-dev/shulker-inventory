@@ -18,7 +18,9 @@
 		"main": [
 			"com.example.shulkerinventory.ShulkerInventory"
 		],
-		"client": []
+		"client": [
+			"com.example.shulkerinventory.client.ShulkerInventoryClient"
+		]
 	},
 	"mixins": [
 		"shulker-inventory.mixins.json",
