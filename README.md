@@ -17,6 +17,9 @@ Everything is handled by the server, so your items can never be duplicated.
 
 ## Versions
 
+### 1.0.0
+First stable release. Opening a held shulker no longer jolts your hand, so the animation stays smooth everywhere.
+
 ### 0.9.3-beta
 The lid animation now also plays on shulkers dropped in the world.
 
