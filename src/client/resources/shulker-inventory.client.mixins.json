@@ -8,7 +8,10 @@
 		"ShulkerCreativeSlotClickMixin",
 		"CreativeSlotWrapperAccessor",
 		"ShulkerBoxScreenAssociateMixin",
-		"ContainerScreenCloseMixin"
+		"ContainerScreenCloseMixin",
+		"ShulkerBoxOpennessMixin",
+		"ShulkerAnimatedMixin",
+		"GuiItemAtlasMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1
