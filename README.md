@@ -11,11 +11,14 @@ straight from your inventory, without ever placing it down.
 - Close the screen (Escape) to put the contents safely back into the shulker.
 - Right-click another shulker while one is open to switch straight to it.
 - Hear the familiar shulker open and close sounds.
-- Watch the shulker lid smoothly animate open and closed as you browse it.
+- Watch the shulker lid smoothly animate open and closed, in the inventory and even on shulkers dropped in the world.
 
 Everything is handled by the server, so your items can never be duplicated.
 
 ## Versions
+
+### 0.9.3-beta
+The lid animation now also plays on shulkers dropped in the world.
 
 ### 0.9.2-beta
 Added the smooth shulker lid open and close animation in the inventory.

@@ -11,7 +11,9 @@
 		"ContainerScreenCloseMixin",
 		"ShulkerBoxOpennessMixin",
 		"ShulkerAnimatedMixin",
-		"GuiItemAtlasMixin"
+		"GuiItemAtlasMixin",
+		"ItemEntityRenderStateMixin",
+		"ItemEntityRendererMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1
