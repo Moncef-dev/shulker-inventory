@@ -17,6 +17,9 @@ Everything is handled by the server, so your items can never be duplicated.
 
 ## Versions
 
+### 1.0.2
+On a server that does not have the mod installed, right-clicking a shulker box now keeps its normal behavior (you can pick it up) instead of doing nothing.
+
 ### 1.0.1
 Shulker boxes added by other mods are now recognized (anything in the shulker boxes tag). Switching between shulkers and closing them is more reliable in edge cases.
 

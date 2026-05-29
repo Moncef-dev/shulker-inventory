@@ -1,7 +1,7 @@
-# Shulker Inventory - Technical Documentation (v1.0.1)
+# Shulker Inventory - Technical Documentation (v1.0.2)
 
 Contributor-facing notes on the technical problems this mod solves, the chosen solutions,
-their scope, and known risks. Describes the state as shipped in v1.0.1.
+their scope, and known risks. Describes the state as shipped in v1.0.2.
 
 ## Environment
 
@@ -113,7 +113,7 @@ Client (`shulker-inventory.client.mixins.json`):
 - `OpenPlayerInventoryPayload` (S2C): reopen the player's inventory screen after a session ends.
 - `AnimationFinishedPayload` (C2S): the closing animation finished, drop the marker.
 
-## 7. Known limitations and risks (v1.0.1)
+## 7. Known limitations and risks (v1.0.2)
 
 - Component-equality divergence (observed, not just theoretical). While `animation_id` is present,
   the shulker is not equal by components to an otherwise identical stack without it. This is a real
