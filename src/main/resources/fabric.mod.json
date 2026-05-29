@@ -3,15 +3,15 @@
 	"id": "shulker-inventory",
 	"version": "${version}",
 	"name": "Shulker Inventory",
-	"description": "This is an example description! Tell everyone what your mod is about!",
+	"description": "Open and rearrange shulker box contents directly from your inventory, in a chest-style screen with a lid animation.",
 	"authors": [
-		"Me!"
+		"Moncef-dev"
 	],
 	"contact": {
-		"homepage": "https://fabricmc.net/",
-		"sources": "https://github.com/FabricMC/fabric-example-mod"
+		"homepage": "https://github.com/Moncef-dev/shulker-inventory",
+		"sources": "https://github.com/Moncef-dev/shulker-inventory"
 	},
-	"license": "CC0-1.0",
+	"license": "MIT",
 	"icon": "assets/shulker-inventory/icon.png",
 	"environment": "*",
 	"entrypoints": {
