@@ -1,7 +1,7 @@
-# Shulker Inventory - Technical Documentation (v1.0.3)
+# Shulker Inventory - Technical Documentation (v1.0.4)
 
 Contributor-facing notes on the technical problems this mod solves, the chosen solutions,
-their scope, and known risks. Describes the state as shipped in v1.0.3.
+their scope, and known risks. Describes the state as shipped in v1.0.4.
 
 ## Environment
 
@@ -120,7 +120,7 @@ Client (`shulker-inventory.client.mixins.json`):
 - `OpenPlayerInventoryPayload` (S2C): reopen the player's inventory screen after a session ends.
 - `AnimationFinishedPayload` (C2S): the closing animation finished, drop the marker.
 
-## 7. Known limitations and risks (v1.0.3)
+## 7. Known limitations and risks (v1.0.4)
 
 - Component-equality divergence (observed, not just theoretical). While `animation_id` is present,
   the shulker is not equal by components to an otherwise identical stack without it. This is a real
@@ -145,11 +145,6 @@ Client (`shulker-inventory.client.mixins.json`):
   cosmetically harmless and, for any marker still in the player's inventory, self-heals at the next
   login (the moved-out case above being the only residual).
 - The render side channel is render-thread-confined; correct but order-sensitive.
-- Close cue uses the shulker MOB sound (our choice). The open uses the shulker box open sound, but
-  the close deliberately uses the shulker MOB close sound (`SHULKER_CLOSE`) as a short, clear cue for
-  frequent inventory switching. Consequence: a resource pack or mod that retunes shulker MOB sounds
-  also changes this close cue (you close a box but hear the retuned mob sound). This is a known
-  consequence of our chosen sound, on our side, not an external mod's fault.
 
 ## 8. Compatibility notes for other mod authors
 

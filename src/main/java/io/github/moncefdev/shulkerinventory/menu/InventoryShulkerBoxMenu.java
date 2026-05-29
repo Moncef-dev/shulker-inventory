@@ -149,7 +149,7 @@ public class InventoryShulkerBoxMenu extends ShulkerBoxMenu {
 
 	private static void playCloseSound(Player player) {
 		player.level().playSound(null, player.getX(), player.getY(), player.getZ(),
-				SoundEvents.SHULKER_CLOSE, SoundSource.BLOCKS,
+				SoundEvents.SHULKER_BOX_CLOSE, SoundSource.BLOCKS,
 				0.5f, player.level().getRandom().nextFloat() * 0.1f + 0.9f);
 	}
 

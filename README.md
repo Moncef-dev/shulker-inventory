@@ -17,6 +17,9 @@ Everything is handled by the server, so your items can never be duplicated.
 
 ## Versions
 
+### 1.0.4
+Closing a shulker box now plays the shulker box's own close sound, matching the lid animation, instead of the shorter shulker creature sound.
+
 ### 1.0.3
 Fixed an item duplication bug in creative mode that could occur when closing a shulker box. Survival mode was never affected.
 
