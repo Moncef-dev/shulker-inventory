@@ -2,6 +2,8 @@ package io.github.moncefdev.shulkerinventory.menu;
 
 import io.github.moncefdev.shulkerinventory.ShulkerInventory;
 import io.github.moncefdev.shulkerinventory.network.OpenPlayerInventoryPayload;
+import io.github.moncefdev.shulkerinventory.network.RemoteShulkerAnimationPayload;
+import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.server.level.ServerPlayer;
@@ -28,13 +30,31 @@ public class InventoryShulkerBoxMenu extends ShulkerBoxMenu {
 	private final SimpleContainer shulkerContent;
 	private final int sourceSlotIndex;
 	private final int sourceSlotInMenu;
+	private final long animationId;
 	private boolean alreadySaved = false;
 
-	public InventoryShulkerBoxMenu(int syncId, Inventory playerInventory, SimpleContainer shulkerContent, int sourceSlotIndex) {
+	public InventoryShulkerBoxMenu(int syncId, Inventory playerInventory, SimpleContainer shulkerContent, int sourceSlotIndex, long animationId) {
 		super(syncId, playerInventory, shulkerContent);
 		this.shulkerContent = shulkerContent;
 		this.sourceSlotIndex = sourceSlotIndex;
 		this.sourceSlotInMenu = findMenuSlotIndex(playerInventory, sourceSlotIndex);
+		this.animationId = animationId;
+	}
+
+	// Mirror a lid animation to the OTHER players who can see the holder, so they see the lid move on the held
+	// shulker too (the holder animates locally and is excluded). Cosmetic broadcast; in singleplayer there are no
+	// other tracking players, so this is a no-op and solo behavior is unchanged.
+	public static void broadcastAnimation(ServerPlayer holder, long animationId, boolean opening) {
+		RemoteShulkerAnimationPayload payload = new RemoteShulkerAnimationPayload(animationId, opening);
+		for (ServerPlayer viewer : PlayerLookup.tracking(holder)) {
+			// Only send to viewers that run the mod and have registered our channel. This skips vanilla clients
+			// (compatibility: never push our payload to a client that cannot handle it) and any viewer not yet
+			// ready to receive it (a just-joined player mid-handshake), which would otherwise error the send and
+			// disconnect that viewer.
+			if (viewer != holder && ServerPlayNetworking.canSend(viewer, RemoteShulkerAnimationPayload.TYPE)) {
+				ServerPlayNetworking.send(viewer, payload);
+			}
+		}
 	}
 
 	private int findMenuSlotIndex(Inventory inventory, int containerSlot) {
@@ -144,6 +164,11 @@ public class InventoryShulkerBoxMenu extends ShulkerBoxMenu {
 		if (!alreadySaved) {
 			saveContents(player);
 			playCloseSound(player);
+		}
+		// Tell the other players who can see the holder to play the closing lid animation. removed() is the single
+		// close chokepoint (toggle, commit-on-disturbance, Escape, swap all route through it).
+		if (player instanceof ServerPlayer serverPlayer) {
+			broadcastAnimation(serverPlayer, animationId, false);
 		}
 	}
 

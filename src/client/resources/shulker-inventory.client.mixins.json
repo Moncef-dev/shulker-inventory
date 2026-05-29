@@ -14,7 +14,8 @@
 		"ShulkerBoxScreenAssociateMixin",
 		"IgnoreAnimationIdSwapMixin",
 		"ItemEntityRenderStateMixin",
-		"ItemEntityRendererMixin"
+		"ItemEntityRendererMixin",
+		"HeldItemAnimationMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1

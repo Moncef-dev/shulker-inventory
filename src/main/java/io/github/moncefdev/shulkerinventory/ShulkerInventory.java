@@ -4,6 +4,7 @@ import io.github.moncefdev.shulkerinventory.menu.InventoryShulkerBoxMenu;
 import io.github.moncefdev.shulkerinventory.network.AnimationFinishedPayload;
 import io.github.moncefdev.shulkerinventory.network.OpenPlayerInventoryPayload;
 import io.github.moncefdev.shulkerinventory.network.OpenShulkerPayload;
+import io.github.moncefdev.shulkerinventory.network.RemoteShulkerAnimationPayload;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
@@ -32,6 +33,7 @@ public class ShulkerInventory implements ModInitializer {
 		PayloadTypeRegistry.serverboundPlay().register(OpenShulkerPayload.TYPE, OpenShulkerPayload.STREAM_CODEC);
 		PayloadTypeRegistry.serverboundPlay().register(AnimationFinishedPayload.TYPE, AnimationFinishedPayload.STREAM_CODEC);
 		PayloadTypeRegistry.clientboundPlay().register(OpenPlayerInventoryPayload.TYPE, OpenPlayerInventoryPayload.STREAM_CODEC);
+		PayloadTypeRegistry.clientboundPlay().register(RemoteShulkerAnimationPayload.TYPE, RemoteShulkerAnimationPayload.STREAM_CODEC);
 
 		// Open handler: validate the slot, toggle closed if this shulker is already open, otherwise copy the
 		// stack's CONTAINER component into a working container and open a vanilla shulker menu bound to it.
@@ -69,7 +71,7 @@ public class ShulkerInventory implements ModInitializer {
 			}
 
 			MenuProvider provider = new SimpleMenuProvider(
-					(syncId, playerInv, p) -> new InventoryShulkerBoxMenu(syncId, playerInv, shulkerContent, slotIndex),
+					(syncId, playerInv, p) -> new InventoryShulkerBoxMenu(syncId, playerInv, shulkerContent, slotIndex, animationId),
 					stack.getHoverName());
 
 			// Only one container menu exists server-side, so close any other open container first (swap path).
@@ -82,6 +84,8 @@ public class ShulkerInventory implements ModInitializer {
 					SoundEvents.SHULKER_BOX_OPEN, SoundSource.BLOCKS,
 					0.5f, player.level().getRandom().nextFloat() * 0.1f + 0.9f);
 			player.openMenu(provider);
+			// Mirror the opening lid animation to the other players who can see this player.
+			InventoryShulkerBoxMenu.broadcastAnimation(player, animationId, true);
 		});
 
 		ServerPlayNetworking.registerGlobalReceiver(AnimationFinishedPayload.TYPE, (payload, context) -> {

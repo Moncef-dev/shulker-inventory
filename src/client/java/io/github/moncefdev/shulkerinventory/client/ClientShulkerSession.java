@@ -69,6 +69,14 @@ public final class ClientShulkerSession {
 		anim.status = AnimationStatus.OPENING;
 	}
 
+	// Starts an animation that mirrors another player's shulker (driven by a server broadcast), with NO pending
+	// screen: this client has no shulker screen for it, so it must not arm the orphan-cleanup that startOpening
+	// uses to drop a local open that no screen claimed.
+	public static void startOpeningRemote(long animationId) {
+		AnimationState anim = animations.computeIfAbsent(animationId, k -> new AnimationState());
+		anim.status = AnimationStatus.OPENING;
+	}
+
 	public static void startClosing(long animationId) {
 		AnimationState anim = animations.get(animationId);
 		if (anim != null && anim.status != AnimationStatus.CLOSING) {

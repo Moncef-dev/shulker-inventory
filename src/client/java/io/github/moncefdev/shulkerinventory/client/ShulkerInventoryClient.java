@@ -1,6 +1,7 @@
 package io.github.moncefdev.shulkerinventory.client;
 
 import io.github.moncefdev.shulkerinventory.network.OpenPlayerInventoryPayload;
+import io.github.moncefdev.shulkerinventory.network.RemoteShulkerAnimationPayload;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -16,6 +17,18 @@ public class ShulkerInventoryClient implements ClientModInitializer {
 				if (player != null) {
 					player.containerMenu = player.inventoryMenu;
 					context.client().setScreen(new InventoryScreen(player));
+				}
+			});
+		});
+
+		// Mirror another player's lid animation (broadcast by the server to players who can see the holder), so we
+		// see the lid move on the shulker held by that other player.
+		ClientPlayNetworking.registerGlobalReceiver(RemoteShulkerAnimationPayload.TYPE, (payload, context) -> {
+			context.client().execute(() -> {
+				if (payload.opening()) {
+					ClientShulkerSession.startOpeningRemote(payload.animationId());
+				} else {
+					ClientShulkerSession.startClosing(payload.animationId());
 				}
 			});
 		});

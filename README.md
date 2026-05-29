@@ -17,6 +17,9 @@ Everything is handled by the server, so your items can never be duplicated.
 
 ## Versions
 
+### 1.0.6
+When you open a shulker box held in your hand, other players can now see its lid animate too.
+
 ### 1.0.5
 Fixed a creative-mode duplication that could happen when picking a shulker box onto the cursor and then closing the inventory. Fixed a multiplayer visual glitch where a transferred shulker box could appear stuck open for another player.
 
