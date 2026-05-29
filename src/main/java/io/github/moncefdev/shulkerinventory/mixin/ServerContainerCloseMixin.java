@@ -1,5 +1,6 @@
 package io.github.moncefdev.shulkerinventory.mixin;
 
+import io.github.moncefdev.shulkerinventory.menu.InventoryShulkerBoxMenu;
 import net.minecraft.network.protocol.game.ServerboundContainerClosePacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
@@ -14,12 +15,13 @@ public abstract class ServerContainerCloseMixin {
 	@Shadow
 	public ServerPlayer player;
 
-	// During a shulker swap we close one menu and immediately open another. A close packet for the previous
-	// menu can arrive late and would otherwise close the freshly opened one, so drop any close whose id does
-	// not match the currently open menu.
+	// During a shulker swap we close one menu and immediately open another; a late close for the previous menu
+	// could otherwise close the freshly opened one. Scoped to OUR menu so we never suppress close packets for
+	// other mods' containers: only drop a mismatched close while one of our shulker menus is the open container.
 	@Inject(method = "handleContainerClose", at = @At("HEAD"), cancellable = true)
 	private void shulkerInventory$ignoreStaleClose(ServerboundContainerClosePacket packet, CallbackInfo ci) {
-		if (packet.getContainerId() != player.containerMenu.containerId) {
+		if (player.containerMenu instanceof InventoryShulkerBoxMenu
+				&& packet.getContainerId() != player.containerMenu.containerId) {
 			ci.cancel();
 		}
 	}

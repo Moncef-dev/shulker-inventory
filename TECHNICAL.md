@@ -81,7 +81,8 @@ dropped item entities.
 
 Server (`shulker-inventory.mixins.json`):
 - `ServerContainerCloseMixin` -> `ServerGamePacketListenerImpl.handleContainerClose` (HEAD,
-  cancellable): drops stale close packets during a menu swap.
+  cancellable): drops stale close packets during a menu swap, scoped to our own menu (never affects
+  other mods' containers).
 
 Client (`shulker-inventory.client.mixins.json`):
 - `ShulkerSlotClickMixin` / `ShulkerCreativeSlotClickMixin` -> `slotClicked` (HEAD, cancellable):
@@ -110,7 +111,6 @@ Client (`shulker-inventory.client.mixins.json`):
 - Disk leak: if the client disconnects or crashes mid-animation, `AnimationFinishedPayload` may
   never arrive and a harmless junk `animation_id` can remain on that shulker (no visual effect:
   `isAnimating` is false, so the renderer falls back to vanilla openness).
-- `ServerContainerCloseMixin` cancels any mismatched close packet (broad scope).
 - The render side channel is render-thread-confined; correct but order-sensitive.
 - Close cue uses the shulker MOB sound (our choice). The open uses the shulker box open sound, but
   the close deliberately uses the shulker MOB close sound (`SHULKER_CLOSE`) as a short, clear cue for

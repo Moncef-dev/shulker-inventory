@@ -33,6 +33,11 @@ public final class ClientShulkerSession {
 	private static final Map<Long, AnimationState> animations = new HashMap<>();
 	private static final WeakHashMap<Screen, Long> screenIdMap = new WeakHashMap<>();
 	private static Long pendingIdForScreen = null;
+	// A pending open waits at most this many ticks for a shulker screen to claim it; if none does (e.g. a
+	// re-click the server turned into a close, or a rejected open), tick() drops the orphan so a later real
+	// shulker screen cannot inherit a stale animation.
+	private static int pendingIdTtl = 0;
+	private static final int PENDING_OPEN_GRACE_TICKS = 10;
 	// Side channel: the render mixins set these to the animation id they are about to draw, so the shulker
 	// openness mixin (which only receives a float arg) can resolve the matching progress. Render-thread only.
 	private static long currentAtlasRenderingId = 0L;
@@ -52,6 +57,7 @@ public final class ClientShulkerSession {
 
 	public static void startOpening(long animationId) {
 		pendingIdForScreen = animationId;
+		pendingIdTtl = PENDING_OPEN_GRACE_TICKS;
 		AnimationState anim = animations.computeIfAbsent(animationId, k -> new AnimationState());
 		anim.status = AnimationStatus.OPENING;
 	}
@@ -66,6 +72,13 @@ public final class ClientShulkerSession {
 	// Steps every active animation once per client tick: OPENING fills up, CLOSING drains and, when it reaches
 	// zero, tells the server the animation finished so it can drop the marker component.
 	public static void tick() {
+		// Drop an orphaned pending open: if no shulker screen claimed it within the grace window, it was a
+		// re-click the server turned into a close (or a rejected open). Remove its dangling state so nothing
+		// leaks and a later screen cannot inherit it.
+		if (pendingIdForScreen != null && --pendingIdTtl <= 0) {
+			animations.remove(pendingIdForScreen);
+			pendingIdForScreen = null;
+		}
 		Iterator<Map.Entry<Long, AnimationState>> it = animations.entrySet().iterator();
 		while (it.hasNext()) {
 			Map.Entry<Long, AnimationState> entry = it.next();
